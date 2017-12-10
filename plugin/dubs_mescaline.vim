@@ -26,78 +26,72 @@
 "                     Fifth Floor, Boston, MA 02110-1301, USA.
 " ===================================================================
 
-" FIXME/2017-12-06: Should this be part of a colorscheme?
-"   At least it shouldn't be part of after/.
-" I wonder if it's its own plugin... dubsacks_after_dark!!!!
-"   no wait that'd be the colors/ name, instead of blacklist...
-" or maybe the 2 get packaged together...
-
 if exists("g:plugin_dubs_mescaline") || &cp
   finish
 endif
 let g:plugin_dubs_mescaline = 1
 
-" Default statusline is empty string. Vim shows filepath, then [+] if dirty,
-" followed by row,column and finally % through file.
+" The default statusline is ''.
 "
-" We make it more colorful; add the mode; and show Git branch.
+" This implores Vim to show:
+"
+"   - First the filepath,
+"     then [+] if dirty,
+"     followed by row,column and
+"     finally % through file,
+"     in a plain, unstylized manner.
+"
+" Dubs Mescaline improves the status line:
+"
+"   - Adds a splash of color,
+"     uses modern Unicode characters,
+"     shows the mode (somewhat useless, but helps indicate active window),
+"     shows the Git branch,
+"     and restyles the cursor metrics to be easier to read.
 
-" We ignore the build-in statusline highlights so that we can use
-" Powerline glyphs and make a prettier status line. These will do
-" nothing:
-"   highlight StatusLine
-"   highlight StatusLineNC
-"   highlight StatusLineTerm
-"   highlight StatusLineTermNC
+" Note that this plugin does not use the built-in statusline highlights:
+"
+"   StatusLine, StatusLineNC, StatusLineTerm, and StatusLineTermNC
+"
+" Instead, it uses the User* (User1, User2, etc.) highlights so that
+" it can use the Powerline glyphs and make a good looking status line.
 
-" Only bother setting highlights if mode changed.
-let g:last_mode = ''
+" Wait until ready to do anything, in case Session.vim
+" contains hooks to any style functions.
+let s:ready_to_roll = 0
 
-function! SetStatusLineHighlights(mode)
+function! SetStatusLineHighlights()
+  " NOTE: To make the best use of the Powerline glyphs, alternate
+  " foregrounds and backgrounds between adjacent colors, which has
+  " the trick of making if look like we specially drew the status
+  " line and didn't just use font and color magic.
+
+  " The User1, User2, and User3 colors and shared between the active
+  " and inactive windows and are used for the mode, git branch, and
+  " cursor/line/column metrics. For the metrics, the colors are reversed
+  " for the inactive windows, to help the user easily tell which window
+  " is active
   hi User1 guifg=#dfff00 guibg=#005f00 gui=BOLD ctermfg=190 ctermbg=22 cterm=BOLD
   hi User2 guifg=#005f00 guibg=#dfff00 gui=BOLD ctermfg=22 ctermbg=190 cterm=BOLD
   hi User3 guifg=#005f00 guibg=#00dfff gui=BOLD ctermfg=22 ctermbg=190 cterm=BOLD
 
+  " The User4 and User6 color are used to style the
+  " file name and extra empty space in inactive windows.
   hi User4 guifg=#00dfff guibg=#001f00 ctermfg=241 ctermbg=234
   hi User6 guifg=#001f00 guibg=#005f00 ctermfg=241 ctermbg=234
 
+  " The active window's file name and filler is styled with User5 and User7.
   hi User5 guifg=#00dfff guibg=#005f00 ctermfg=239 ctermbg=255
   hi User7 guifg=#005f00 guibg=#dfff00 ctermfg=239 ctermbg=255
 
   " 2017-12-06: The original code that I copied changed the highlight
   "   of the mode text depending on the mode, but that's really distracting,
   "   and seeing the mode name is not a big deal, as you can infer the mode
-  "   by looking at the cursor.
-  " I should probably just delete this comment, but I still might change
-  "   my mind, I suppose...
-  "if a:mode ==# 'n'
-  "  hi User1 guifg=#dfff00 ctermfg=190
-  "  hi User2 guifg=#dfff00 ctermfg=190
-  "elseif a:mode ==# "i"
-  "  hi User1 guifg=#005fff guibg=#FFFFFF ctermfg=27 ctermbg=255
-  "  hi User2 guifg=#FFFFFF ctermfg=255
-  "elseif a:mode ==# "R"
-  "  hi User1 guifg=#FFFFFF guibg=#df0000 ctermfg=255 ctermbg=160
-  "  hi User2 guifg=#df0000 ctermfg=160
-  "elseif a:mode ==? "v" || a:mode ==# ""
-  "  hi User1 guifg=#4e4e4e guibg=#ffaf00 ctermfg=239 ctermbg=214
-  "  hi User2 guifg=#ffaf00 ctermfg=214
-  "endif
+  "   by looking at the cursor. It was a cute trick, though.
 endfunction
 
 " FIXME: Make the g: functions use the plugin#syntax, or make name with project prefix.
 function! SetStatusLineMode()
-  let l:mode = mode()
-  if l:mode !=# g:last_mode
-    " 2017-12-09: There's no need to change User* highlights
-    " since we no longer change color depending on the mode.
-    " At least not except the first time.
-    if g:last_mode ==# ''
-      call SetStatusLineHighlights(l:mode)
-    endif
-    let g:last_mode = l:mode
-  endif
-
   let l:cmode = mode()
   let l:mode0 = s:omode
   let s:omode = l:cmode
@@ -130,16 +124,17 @@ function! SetStatusLineMode()
     "echom 'Skipping Statusline to avoid flashing.'
     return s:ModeFriendlyString(l:mode0)
   else
-    return s:ModeFriendlyString(l:mode)
+    return s:ModeFriendlyString(l:cmode)
   endif
 endfunction
 
 function! TickleStatusLineMode(timer_id)
   " Set statusline= again, which'll trigger a refresh.
-  call s:SetStatusLineMain(0)
+  call s:SetStatusLine(0)
 endfunction
 
 " NOTE: You canNOT use, e.g., "^V" or "\^V", to match control characters.
+" For more on this list, see :help mode()
 let s:vim_mode_lookup = {
   \ "n":      "NORMAL",
   \ "no":     "N·OPER",
@@ -167,29 +162,13 @@ let s:vim_mode_lookup = {
 \ }
 
 function! s:ModeFriendlyString(mode)
-  " See :help mode()
-  "echom 'ModeFriendlyString: mode: ' . a:mode
   return get(s:vim_mode_lookup, a:mode, "NOTFND")
 endfunction
 
-" MAYBE/2017-12-05: This function is called a lot.
+" MAYBE/2017-12-05: This function is called often.
 "   Can we cache lookup of { winnr => active? }
 "   and return immediately if no change needed?
-function! s:SetStatusLineMain(nr)
-  " If not the active window, switch to it, so we can call setlocal.
-  let l:orig_nr = winnr()
-  if a:nr > 0
-    try
-      execute a:nr . 'wincmd w'
-    catch
-      " Happens when searching and results scroll by.
-      " E788: Not allowed to edit another buffer now
-      " FIXME/2017-12-05: Isn't there a way to detect this??
-      echom "Skip winnr: " . winnr()
-      return
-    endtry
-  endif
-
+function! s:FetchStatusLineMain(active_window)
   " Start with an empty statusline. We build a string, rather than
   " calling `set statusline+=`, so that we can build the statusline
   " differently based on the window width.
@@ -206,13 +185,13 @@ function! s:SetStatusLineMain(nr)
   " Note that Hack font includes 7 of 36 Powerline glyphs.
   "   https://github.com/ryanoasis/powerline-extra-symbols#glyphs
   " Hack includes this Powerline glyphs:
-  "   e0a0 
-  "   e0a1 
-  "   e0a2 
-  "   e0b0 
-  "   e0b1 
-  "   e0b2 
-  "   e0b3 
+  "   e0a0       " a branch symbol
+  "   e0a1       " an L/N symbol
+  "   e0a2       " a lock symbol
+  "   e0b0       " a solid right-half of a diamond
+  "   e0b1       " an outline of a right-half of a diamond
+  "   e0b2       " a solid left-half of a diamond
+  "   e0b3       " an outline of a left-half of a diamond
   " Note that there's an aggregate font, Nerd Fonts, which seems awesome
   " -- it includes all of the Powerline glyphs, for one -- but there's a
   " 1-pixel space at the edge of each Powerline glyph. Bah.
@@ -221,10 +200,7 @@ function! s:SetStatusLineMain(nr)
   " The 'Symbol, Other' category has good unicode.
   "   http://www.fileformat.info/info/unicode/category/So/list.htm
 
-  if a:nr == 0
-    "let l:statline .= "%1*"
-    "let l:statline .= "%1*⛘"
-    "let l:statline .= '%1*\ '
+  if a:active_window
     let l:statline .= "%2*"
     let l:statline .= "%2*%{SetStatusLineMode()}"
     let l:statline .= "%1*"
@@ -242,7 +218,7 @@ function! s:SetStatusLineMain(nr)
   " But adding the matchstr(...) to statusline, even trying different
   "   escaping for the glob, fails.
   " Fortunately, we can just make is a callback.
-  let l:statline .= '%{SetStatusLineGitBranch()}'
+  let l:statline .= '%{FetchStatusLineGitBranch()}'
 
   let l:statline .= "\\ %3*\\ "
 
@@ -250,7 +226,7 @@ function! s:SetStatusLineMain(nr)
 " then do this automatically based on if bool is enabled
 " (and only add to statusline if bool enabled, 'natch).
   let l:avail_width = winwidth(0)
-  if a:nr == 0
+  if a:active_window
     " Remove 8 characters for the mode status.
     let l:avail_width -= 8
   endif
@@ -265,10 +241,10 @@ function! s:SetStatusLineMain(nr)
     let l:avail_width -= 5
   endif
   " Account for spaces are filename and for transition highlight.
-  if a:nr > 0
-    let l:avail_width -= 3
-  else
+  if a:active_window
     let l:avail_width -= 4
+  else
+    let l:avail_width -= 3
   endif
 
   " h F   Help buffer flag, text is "[help]".
@@ -298,10 +274,6 @@ function! s:SetStatusLineMain(nr)
     " M F   Modified flag, text is ",+" or ",-".
     " r F   Readonly flag, text is "[RO]".
     " R F   Readonly flag, text is ",RO".
-    "let l:statline .= "%f\\ %{&ro?'⭤':''}%{&mod?'+':''}%<"
-    "let l:statline .= "%." . l:avail_width . "f\\ %{&ro?'⭤':''}%{&mod?'+':''}%<"
-    "let l:statline .= "%." . l:avail_width . "f\\ %{&ro?'':''}%{&mod?'○':'●'}%<"
-    "let l:statline .= "%." . l:avail_width . "f\\ %{&ro?'':''}%{&mod?'+':''}%<"
     let l:statline .= "%." . l:avail_width . "f%{&ro?'\\ ':''}%{&mod?'\\ 🚩':''}%<"
   endif
   " We should not use &ft because it's not set to 'help' when the help is
@@ -314,27 +286,27 @@ function! s:SetStatusLineMain(nr)
   let l:statline .= "%#warningmsg#"
   let l:statline .= "%{SyntasticStatuslineFlag()}"
 
-  if a:nr > 0
-    let l:statline .= "%4*"
-  else
+  if a:active_window
     let l:statline .= "%5*"
+  else
+    let l:statline .= "%4*"
   endif
   let l:statline .= ""
 
   " Meh. I thought about honoring StatusLine, but since we use the
   " Powerline glyphs, we need to make sure adjacent highlights match.
-  "if a:nr > 0
-  "  let l:statline .= "%#StatusLineNC#"
-  "else
+  "if a:active_window
   "  let l:statline .= "%#StatusLine#"
+  "else
+  "  let l:statline .= "%#StatusLineNC#"
   "endif
   " %=      split left-alighed and right-aligned
   let l:statline .= "%="
 
-  if a:nr > 0
-    let l:statline .= "%6*"
-  else
+  if a:active_window
     let l:statline .= "%7*"
+  else
+    let l:statline .= "%6*"
   endif
   let l:statline .= ""
 
@@ -368,7 +340,28 @@ function! s:SetStatusLineMain(nr)
 
   let l:statline .= "%2*█"
 
-  "echom 'l:statline: ' . l:statline
+  return l:statline
+endfunction
+
+function! s:SetStatusLine(nr)
+  " If not the active window, switch to it, so we can call setlocal.
+  let l:orig_nr = winnr()
+  if a:nr > 0 && a:nr != l:orig_nr
+    try
+      execute a:nr . 'wincmd w'
+    catch
+      " Happens when searching and results scroll by.
+      " E788: Not allowed to edit another buffer now
+      " MAYBE/2017-12-05: You'd think you could detect this
+      "   and not just have to blindly try.
+      "echom "Skip winnr: " . winnr()
+      return
+    endtry
+  endif
+
+  let l:active_window = (a:nr == 0)
+
+  let l:statline = s:FetchStatusLineMain(l:active_window)
 
   " WEIRD: If only one window open, calling setlocal doesn't do the trick.
   if winnr('$') == 1
@@ -377,27 +370,14 @@ function! s:SetStatusLineMain(nr)
     exe 'setlocal statusline=' . l:statline
   end
 
-  if a:nr > 0
+  if winnr() != l:orig_nr
     execute l:orig_nr . "wincmd w"
   endif
 endfunction
 
-function! SetStatusLineGitBranch()
+function! FetchStatusLineGitBranch()
   return matchstr(fugitive#statusline(),'(\zs.*\ze)')
 endfunction
-
-" "set statusline=......%{FileSize()}.....
-" function FileSize()
-"  let bytes = getfsize(expand("%:p"))
-"  if bytes <= 0
-"    return ""
-"  endif
-"  if bytes < 1024
-"    return bytes
-"  else
-"    return (bytes / 1024) . "K"
-"  endif
-"endfunction
 
 let s:oldnr = -1
 let s:omode = ''
@@ -447,11 +427,11 @@ function! s:on_window_changed(event_name)
 
   for nr in filter(range(1, winnr('$')), 'v:val != winnr()')
     "echom 'On inactive window: ' . nr . ' / ' . winbufnr(nr)
-    call s:SetStatusLineMain(nr)
+    call s:SetStatusLine(nr)
   endfor
 
   "echom 'On active window: ' . winnr() . ' / ' . winbufnr(0)
-  call s:SetStatusLineMain(0)
+  call s:SetStatusLine(0)
 
   if l:mrunr != -1
     execute 'silent ' . l:mrunr . 'wincmd w'
@@ -462,9 +442,7 @@ function! s:on_window_changed(event_name)
 endfunction
 
 function! s:MescalineStandUpStatusline()
-  " Weird: If you call SetStatusLineHighlights(0) on Vim boot, it gets
-  " stuck in a loading look and you have to Ctrl-C to break free....
-  call SetStatusLineHighlights(0)
+  call SetStatusLineHighlights()
 
   augroup <SID>DubsMescaLine
     autocmd!
