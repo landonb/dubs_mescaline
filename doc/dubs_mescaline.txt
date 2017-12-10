@@ -1,0 +1,53 @@
+*dubs_mescaline.txt*	For Vim version 7.4.	Last change: 2017 Dec 09
+
+Dubsacks Vim -- Mescaline Plugin~
+
+MAGICAL STATUS LINE			*dubs-mescaline*
+
+1. About This Plugin			|dubs-mescaline-about|
+2. Mescaline Commands		        |dubs-mescaline-commands|
+
+==============================================================================
+1. About This Plugin			*dubs-mescaline-about*
+
+This plugin provides a simple, elegant status line:
+
+- Shows [Vim mode] > [Git branch] > [File name + flags] > [Cursor info]
+
+- Utilizes the awesome `Powerline font` <https://github.com/powerline/fonts>
+  to render a clean, vibrant status line.
+
+  - If you're looking for a great font that includes the Powerline
+    glyphs, check out `Hack`.
+
+    - Hack
+
+      https://github.com/source-foundry/Hack
+
+      "A typeface designed for source code."
+
+- Single file plugin; easy to hack.
+
+- Inspired by other great plugins that just didn't cut it for me:
+
+  - `Powerline`
+
+    https://github.com/powerline/powerline
+
+  - `vim-airline`
+
+    https://github.com/vim-airline/vim-airline
+
+  - `lightline`
+
+    https://github.com/itchyny/lightline.vim
+
+==============================================================================
+2. Mescaline Commands			*dubs-mescaline-commands*
+
+Mescaline Commands~
+
+This script does not define any commands.
+
+ vim:tw=78:ts=8:ft=help:norl:
+
