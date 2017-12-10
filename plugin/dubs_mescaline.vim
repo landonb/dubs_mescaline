@@ -401,30 +401,43 @@ endfunction
 
 let s:oldnr = -1
 let s:omode = ''
-function! s:on_window_changed()
-  let l:curnr = winnr()
-
-  " NOTE: Core Vim will "lock" a buffer when it's doing something
-  " synchronous and doesn't want you changing the current buffer
-  " (which includes switching windows). If you try, you'll see the
-  " error message:
-  "
-  "   E788: Not allowed to edit another buffer now
-  "
-  " However, you won't see the error message if you try-catch.
-  " And note that you don't need "silent!" to suppress the error;
-  " rather, using silent will both suppress the error and the exception.
-  try
-    " Determine previous window, so we can restore
-    " same gesture for other plugins. (I.e., don't
-    " ruin the MRU window list for other code.)
-    wincmd p
-    let l:mrunr = winnr()
-    wincmd p
-  catch
-    "echom "Buffer is locked! Cannot switch windows."
+function! s:on_window_changed(event_name)
+  "echom 'on_window_changed: on ' . a:event_name
+  if s:ready_to_roll == 0
     return
-  endtry
+  endif
+
+  let l:restore_mru = 1
+  let l:mrunr = -1
+
+  let l:curnr = winnr()
+  if l:restore_mru == 1
+    " NOTE: Core Vim will "lock" a buffer when it's doing something
+    " synchronous and doesn't want you changing the current buffer
+    " (which includes switching windows). If you try, you'll see the
+    " error message:
+    "
+    "   E788: Not allowed to edit another buffer now
+    "
+    " However, you won't see the error message if you try-catch.
+    " And note that you don't need "silent!" to suppress the error;
+    " rather, using silent will both suppress the error and the exception.
+    if winnr('$') > 1
+      try
+        " Determine previous window, so we can restore
+        " same gesture for other plugins. (I.e., don't
+        " ruin the MRU window list for other code.)
+        wincmd p
+        let l:mrunr = winnr()
+        wincmd p
+      catch
+        "echom "Buffer is locked! Cannot switch windows."
+        return
+      endtry
+    endif
+  endif
+
+  "echom 'In on_window_changed: curnr: ' . l:curnr . ' / mrunr: ' l:mrunr . ' / oldnr: ' s:oldnr
 
   if l:curnr == s:oldnr
     "echom 'Skipping Statusline for same window again.'
@@ -440,8 +453,12 @@ function! s:on_window_changed()
   "echom 'On active window: ' . winnr() . ' / ' . winbufnr(0)
   call s:SetStatusLineMain(0)
 
-  execute 'silent ' . l:mrunr . 'wincmd w'
-  execute 'silent ' . l:curnr . 'wincmd w'
+  if l:mrunr != -1
+    execute 'silent ' . l:mrunr . 'wincmd w'
+    execute 'silent ' . l:curnr . 'wincmd w'
+  endif
+
+  "echom 'Done on_window_changed: curnr: ' . l:curnr . ' / mrunr: ' l:mrunr
 endfunction
 
 function! s:MescalineStandUpStatusline()
@@ -452,23 +469,37 @@ function! s:MescalineStandUpStatusline()
   augroup <SID>DubsMescaLine
     autocmd!
 
-    autocmd CmdwinEnter * call <sid>on_window_changed()
-
-    autocmd VimEnter,WinEnter,BufWinEnter,FileType,BufUnload *
-      \ call <sid>on_window_changed()
+    autocmd CmdwinEnter * call <sid>on_window_changed('CmdwinEnter')
+    autocmd WinEnter * call <sid>on_window_changed('WinEnter')
+    autocmd BufWinEnter * call <sid>on_window_changed('BufWinEnter')
+    autocmd FileType * call <sid>on_window_changed('FileType')
+    autocmd BufUnload * call <sid>on_window_changed('BufUnload')
+    " MAYBE/2017-12-10: I was having problems with close-all, but I think
+    " I fixed them. Otherwise, I was considering maybe needing to hook
+    " some exit events, but none of them seemed very useful.
+    "   BufDelete, BufHidden, BufFilePre, BufFilePost (before/after renaming cur buf)
+    "   BufLeave, BufUnload, BufWinLeave, WinLeave, VimLeave
 
     " NOTE: There does not seem to be an event for resizing splits,
     " just for resizing the entire Vim window. I even wrote to the
     " log and did not see any activity when dragging a split and
     " resizing two windows.
     "   gvim -V9myVim.log ~/.vim/bundle_/dubs_appearance/after/plugin/dubs_appearance.vim
-    autocmd VimResized * call <sid>on_window_changed()
+    autocmd VimResized * call <sid>on_window_changed('VimResized')
 
     " Reset the highlights after a :colorscheme change.
-    autocmd ColorScheme * call SetStatusLineHighlights(mode())
+    autocmd ColorScheme * call SetStatusLineHighlights()
   augroup END
 
+  let s:ready_to_roll = 1
 endfunction
 
-call s:MescalineStandUpStatusline()
+"call s:MescalineStandUpStatusline()
+if v:vim_did_enter
+  call <sid>MescalineStandUpStatusline()
+else
+  " Weird. I don't think the original author really wanted to hook VimEnter...
+  "autocmd VimEnter * call <sid>on_window_changed('VimEnter')
+  autocmd VimEnter * call <sid>MescalineStandUpStatusline()
+endif
 
