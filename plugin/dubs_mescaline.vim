@@ -463,6 +463,8 @@ function! s:StandUpStatusline()
     " Reset the highlights after a :colorscheme change.
     autocmd ColorScheme * call SetStatusLineHighlights(mode())
   augroup END
+
+  call SetStatusLineHighlights(0)
 endfunction
 
 call <SID>StandUpStatusline()
