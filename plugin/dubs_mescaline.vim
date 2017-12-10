@@ -1,6 +1,6 @@
 " File: dubs_appearance.vim
 " Author: Landon Bouma (landonb &#x40; retrosoft &#x2E; com)
-" Last Modified: 2017.12.09
+" Last Modified: 2017.12.10
 " Project Page: https://github.com/landonb/dubs_appearance
 " Summary: Basic Vim configuration (no functions; just settings and mappings)
 " License: GPLv3
@@ -444,7 +444,11 @@ function! s:on_window_changed()
   execute 'silent ' . l:curnr . 'wincmd w'
 endfunction
 
-function! s:StandUpStatusline()
+function! s:MescalineStandUpStatusline()
+  " Weird: If you call SetStatusLineHighlights(0) on Vim boot, it gets
+  " stuck in a loading look and you have to Ctrl-C to break free....
+  call SetStatusLineHighlights(0)
+
   augroup <SID>DubsMescaLine
     autocmd!
 
@@ -464,8 +468,7 @@ function! s:StandUpStatusline()
     autocmd ColorScheme * call SetStatusLineHighlights(mode())
   augroup END
 
-  call SetStatusLineHighlights(0)
 endfunction
 
-call <SID>StandUpStatusline()
+call s:MescalineStandUpStatusline()
 
