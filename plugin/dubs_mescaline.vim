@@ -1,6 +1,6 @@
 " File: dubs_appearance.vim
 " Author: Landon Bouma (landonb &#x40; retrosoft &#x2E; com)
-" Last Modified: 2017.12.10
+" Last Modified: 2017.12.19
 " Project Page: https://github.com/landonb/dubs_appearance
 " Summary: Basic Vim configuration (no functions; just settings and mappings)
 " License: GPLv3
@@ -96,7 +96,7 @@ function! SetStatusLineMode()
   let l:mode0 = s:omode
   let s:omode = l:cmode
   " NOTE: ==# forces case sensitive match, in case ignorecase is enabled.
-  if l:mode0 ==# 'i' && l:cmode == 'n'
+  if l:mode0 ==# 'i' && l:cmode ==# 'n'
     " In Insert mode, if you arrow up or arrow down, the mode toggles
     " to Normal mode and then back to Insert. (Possible because... I
     " dunno.)
