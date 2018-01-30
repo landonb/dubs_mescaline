@@ -98,29 +98,22 @@ function! SetStatusLineMode()
   " NOTE: ==# forces case sensitive match, in case ignorecase is enabled.
   if l:mode0 ==# 'i' && l:cmode ==# 'n'
     " In Insert mode, if you arrow up or arrow down, the mode toggles
-    " to Normal mode and then back to Insert. (Possible because... I
-    " dunno.)
-    " Set a timer to correct this issue if user really did switch modes.
+    "   to Normal mode and then back to Insert. (I have no idea way.)
+    " As such, set a timer and wait to check if user really did switch modes.
     "   https://github.com/vim/vim/blob/master/runtime/doc/version8.txt#L66
-    " 2017-12-05: Whatever: The docs say setting a variable to the return
-    " value should work, but this raises "E121: Undefined variable: call".
-    "   let s:mode_timer = call timer_start(500, 's:TickleStatusLineMode')
-    " I also tried = exe "call ..." but then 'exe' is said undefined.
-    " I also tried using redir:
-    "   redir => s:mode_timer
-    "   ...
-    "   redir END
-    " but the variable remains unset.
-    " So I'm really not sure what's up with that.
-    " Also, without the 'call', timer_start raises:
-    "   E492: Not an editor command: timer_start...
-    " Whatever; we don't need the timer_id, I suppose; if we
-    " don't cancel the timer (stop_timer), it's not a big deal.
-    " Oh, and I could not get <SID> to work: 's:TickleStatusLineMode'
-    " complains of not having script context, and <SID> unrecognized:
-    "   call timer_start(125, 's:TickleStatusLineMode')
-    "   call timer_start(125, <SID>.'TickleStatusLineMode')
-    call timer_start(125, 'TickleStatusLineMode')
+    " Note that using s:/<SID> doesn't work here:
+    "   call timer_start(125, 's:TickleStatusLineMode')     " no 'script context'
+    "   call timer_start(125, <SID>.'TickleStatusLineMode') " 'unrecognized'
+    " And note that with 'let', you don't use 'call', or hell breaks loose.
+    if has("timers")
+      call timer_start(125, 'TickleStatusLineMode')
+      let l:timer_id = timer_start(125, 'TickleStatusLineMode')
+    else
+      " Not +timers.
+      " So... there doesn't seem to be an issue without +timers.
+      "   2018-01-29 21:24: Or perhaps it's the machine I'm on.
+      call TickleStatusLineMode(0)
+    end
     "echom 'Skipping Statusline to avoid flashing.'
     return s:ModeFriendlyString(l:mode0)
   else
