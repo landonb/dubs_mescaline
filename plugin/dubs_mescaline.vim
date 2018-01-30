@@ -473,7 +473,7 @@ function! s:MescalineStandUpStatusline()
 endfunction
 
 "call s:MescalineStandUpStatusline()
-if v:vim_did_enter
+if exists("v:vim_did_enter") && v:vim_did_enter
   call <sid>MescalineStandUpStatusline()
 else
   " Weird. I don't think the original author really wanted to hook VimEnter...
