@@ -14,7 +14,7 @@ This plugin provides a simple, elegant status line:
 
 - Shows [Vim mode] > [Git branch] > [File name + flags] > [Cursor info]
 
-- Utilizes the awesome `Powerline font <https://github.com/powerline/fonts>`__ 
+- Utilizes the awesome `Powerline font <https://github.com/powerline/fonts>`__
   to render a clean, vibrant status line.
 
   - If you're looking for a great font that includes the Powerline
