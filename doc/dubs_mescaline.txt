@@ -1,6 +1,6 @@
 *dubs_mescaline.txt*	For Vim version 7.4.	Last change: 2017 Dec 09
 
-Dubsacks Vim -- Mescaline Plugin~
+Dubs Vim -- Mescaline Plugin~
 
 MAGICAL STATUS LINE			*dubs-mescaline*
 

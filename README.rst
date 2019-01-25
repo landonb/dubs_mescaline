@@ -1,5 +1,5 @@
-Dubsacks Vim — Mescaline
-========================
+Dubs Vim — Mescaline
+====================
 
 Clean, vibrant Vim status line.
 
