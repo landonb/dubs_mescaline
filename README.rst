@@ -1,5 +1,8 @@
-Dubs Vim — Mescaline
-====================
+############################
+Dubs Vim |em_dash| Mescaline
+############################
+
+.. |em_dash| unicode:: 0x2014 .. em dash
 
 Clean, vibrant Vim status line.
 
@@ -8,7 +11,7 @@ Clean, vibrant Vim status line.
 *The Dubs Mescaline status line and* `Dubs After Dark <https://github.com/landonb/dubs_mescaline>`__ *color scheme.*
 
 About This Plugin
------------------
+=================
 
 This plugin provides a simple, elegant status line:
 
@@ -35,7 +38,7 @@ This plugin provides a simple, elegant status line:
   <https://github.com/itchyny/lightline.vim>`__
 
 Installation
-------------
+============
 
 Standard Pathogen installation:
 
