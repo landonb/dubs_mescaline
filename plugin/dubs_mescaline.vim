@@ -437,6 +437,13 @@ endfunction
 function! s:MescalineStandUpStatusline()
   call SetStatusLineHighlights()
 
+  " You won't need to see the mode twice, veritically adjacent one another.
+  " - We put the mode in our MescaLine, so omit from the Vim status line.
+  "   Note that this makes some interactions nicer, e.g., in insert mode,
+  "   Vim normally shows the test "-- INSERT --", but this hides/obscures
+  "   any messages your plugins might try to write, e.g., to :echomsg.
+  set noshowmode
+
   augroup <SID>DubsMescaLine
     autocmd!
 
