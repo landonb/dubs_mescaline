@@ -1,8 +1,9 @@
-" File: dubs_appearance.vim
+" File: dubs_mescaline.vim
 " Author: Landon Bouma (landonb &#x40; retrosoft &#x2E; com)
 " Last Modified: 2017.12.19
 " Project Page: https://github.com/landonb/dubs_appearance
-" Summary: Basic Vim configuration (no functions; just settings and mappings)
+" Summary: Wonderful Vim statusline interpretation.
+" Requires: Relies on tpope/fugitive and scrooloose/syntastic.
 " License: GPLv3
 " vim:tw=0:ts=2:sw=2:et:norl:ft=vim
 " ----------------------------------------------------------------------------
