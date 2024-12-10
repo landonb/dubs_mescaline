@@ -278,7 +278,11 @@ function! s:FetchStatusLineMain(active_window)
 
   " MAYBE/2017-12-05: Does this ever return non-empty string?
   let l:statline .= "%#warningmsg#"
-  let l:statline .= "%{SyntasticStatuslineFlag()}"
+  if exists("*SyntasticStatuslineFlag")
+    " ISOFF/2024-12-10: Syntastic (and dubs_syntastic_wrap) is (are) deprecated.
+    " - MAYBE: Replace with CoC or other disagnostic status.
+    let l:statline .= "%{SyntasticStatuslineFlag()}"
+  endif
 
   if a:active_window
     let l:statline .= "%5*"
