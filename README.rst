@@ -37,6 +37,9 @@ This plugin provides a simple, elegant status line:
   `lightline
   <https://github.com/itchyny/lightline.vim>`__
 
+- See also Tim Pope's
+  `vim-flagship <https://github.com/tpope/vim-flagship>`__
+
 Installation
 ============
 
