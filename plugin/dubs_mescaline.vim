@@ -44,7 +44,7 @@ let g:plugin_dubs_mescaline = 1
 " contains hooks to any style functions.
 let s:ready_to_roll = 0
 
-function! SetStatusLineHighlights()
+function! MescalineSetStatusLineHighlights()
   " NOTE: To make the best use of the Powerline glyphs, alternate
   " foregrounds and backgrounds between adjacent colors, which has
   " the trick of making if look like we specially drew the status
@@ -74,8 +74,7 @@ function! SetStatusLineHighlights()
   "   by looking at the cursor. It was a cute trick, though.
 endfunction
 
-" FIXME: Make the g: functions use the plugin#syntax, or make name with project prefix.
-function! SetStatusLineMode()
+function! MescalineSetStatusLineMode()
   let l:cmode = mode()
   let l:mode0 = s:omode
   let s:omode = l:cmode
@@ -179,7 +178,7 @@ function! s:FetchStatusLineMain(active_window)
 
   if a:active_window
     let l:statline .= "%2*"
-    let l:statline .= "%2*%{SetStatusLineMode()}"
+    let l:statline .= "%2*%{MescalineSetStatusLineMode()}"
     let l:statline .= "%1*"
   else
     let l:statline .= "%1*"
@@ -195,7 +194,7 @@ function! s:FetchStatusLineMain(active_window)
   " But adding the matchstr(...) to statusline, even trying different
   "   escaping for the glob, fails.
   " Fortunately, we can just make is a callback.
-  let l:statline .= '%{FetchStatusLineGitBranch()}'
+  let l:statline .= '%{MescalineFetchStatusLineGitBranch()}'
 
   let l:statline .= "\\ %3*\\ "
 
@@ -356,7 +355,7 @@ function! s:SetStatusLine(nr)
   endif
 endfunction
 
-function! FetchStatusLineGitBranch()
+function! MescalineFetchStatusLineGitBranch()
   return matchstr(fugitive#statusline(),'(\zs.*\ze)')
 endfunction
 
@@ -423,7 +422,7 @@ function! s:on_window_changed(event_name)
 endfunction
 
 function! s:MescalineStandUpStatusline()
-  call SetStatusLineHighlights()
+  call MescalineSetStatusLineHighlights()
 
   " You won't need to see the mode twice, veritically adjacent one another.
   " - We put the mode in our MescaLine, so omit from the Vim status line.
@@ -455,7 +454,7 @@ function! s:MescalineStandUpStatusline()
     autocmd VimResized * call <sid>on_window_changed('VimResized')
 
     " Reset the highlights after a :colorscheme change.
-    autocmd ColorScheme * call SetStatusLineHighlights()
+    autocmd ColorScheme * call MescalineSetStatusLineHighlights()
   augroup END
 
   let s:ready_to_roll = 1
@@ -463,10 +462,10 @@ endfunction
 
 "call s:MescalineStandUpStatusline()
 if exists("v:vim_did_enter") && v:vim_did_enter
-  call <sid>MescalineStandUpStatusline()
+  call <SID>MescalineStandUpStatusline()
 else
   " Weird. I don't think the original author really wanted to hook VimEnter...
   "autocmd VimEnter * call <sid>on_window_changed('VimEnter')
-  autocmd VimEnter * call <sid>MescalineStandUpStatusline()
+  autocmd VimEnter * call <SID>MescalineStandUpStatusline()
 endif
 
