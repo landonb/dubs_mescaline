@@ -434,11 +434,11 @@ function! s:MescalineStandUpStatusline()
   augroup <SID>DubsMescaLine
     autocmd!
 
-    autocmd CmdwinEnter * call <sid>on_window_changed('CmdwinEnter')
-    autocmd WinEnter * call <sid>on_window_changed('WinEnter')
-    autocmd BufWinEnter * call <sid>on_window_changed('BufWinEnter')
-    autocmd FileType * call <sid>on_window_changed('FileType')
-    autocmd BufUnload * call <sid>on_window_changed('BufUnload')
+    autocmd CmdwinEnter * call <SID>on_window_changed('CmdwinEnter')
+    autocmd WinEnter * call <SID>on_window_changed('WinEnter')
+    autocmd BufWinEnter * call <SID>on_window_changed('BufWinEnter')
+    autocmd FileType * call <SID>on_window_changed('FileType')
+    autocmd BufUnload * call <SID>on_window_changed('BufUnload')
     " MAYBE/2017-12-10: I was having problems with close-all, but I think
     " I fixed them. Otherwise, I was considering maybe needing to hook
     " some exit events, but none of them seemed very useful.
@@ -451,7 +451,7 @@ function! s:MescalineStandUpStatusline()
     " resizing two windows.
     "   gvim -V9myVim.log \
     "     ~/.vim/pack/landonb/start/dubs_appearance/after/plugin/dubs_appearance.vim
-    autocmd VimResized * call <sid>on_window_changed('VimResized')
+    autocmd VimResized * call <SID>on_window_changed('VimResized')
 
     " Reset the highlights after a :colorscheme change.
     autocmd ColorScheme * call MescalineSetStatusLineHighlights()
@@ -465,7 +465,7 @@ if exists("v:vim_did_enter") && v:vim_did_enter
   call <SID>MescalineStandUpStatusline()
 else
   " Weird. I don't think the original author really wanted to hook VimEnter...
-  "autocmd VimEnter * call <sid>on_window_changed('VimEnter')
+  "autocmd VimEnter * call <SID>on_window_changed('VimEnter')
   autocmd VimEnter * call <SID>MescalineStandUpStatusline()
 endif
 
