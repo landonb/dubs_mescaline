@@ -84,7 +84,7 @@ function! MescalineSetStatusLineHighlights()
 endfunction
 
 function! MescalineSetStatusLineMode()
-  let l:cmode = mode()
+  let l:cmode = mode(1)
   let l:mode0 = s:omode
   let s:omode = l:cmode
   " NOTE: ==# forces case sensitive match, in case ignorecase is enabled.
