@@ -6,14 +6,23 @@
 " License: GPLv3
 " Copyright © 2009, 2015-2017 Landon Bouma.
 
-" ----------------------------------------------------------------------------
+" -------------------------------------------------------------------
 
-if exists("g:plugin_dubs_mescaline") || &cp
+" GUARD: Press <F9> to reload this plugin (or :source it).
+" - Via: https://github.com/embrace-vim/vim-source-reloader#↩️
+
+if expand('%:p') ==# expand('<sfile>:p')
+  unlet! g:plugin_dubs_mescaline
+endif
+
+if exists('g:plugin_dubs_mescaline') || &cp
+
   finish
 endif
+
 let g:plugin_dubs_mescaline = 1
 
-" ----------------------------------------------------------------------------
+" -------------------------------------------------------------------
 
 " The default statusline is ''.
 "
