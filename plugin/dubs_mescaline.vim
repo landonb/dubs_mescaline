@@ -474,7 +474,7 @@ function! s:MescalineStandUpStatusline()
     " log and did not see any activity when dragging a split and
     " resizing two windows.
     "   gvim -V9myVim.log \
-    "     ~/.vim/pack/landonb/start/dubs_appearance/after/plugin/dubs_appearance.vim
+    "     ~/.kit/nvim/landonb/start/dubs_appearance/after/plugin/dubs_appearance.vim
     autocmd VimResized * call <SID>on_window_changed('VimResized')
 
     " Reset the highlights after a :colorscheme change.
