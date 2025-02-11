@@ -66,11 +66,12 @@ function! g:embrace#mescaline#MescalineSetStatusLineHighlights() abort
 
   hi MescalineNarrow guifg=#001f00 guibg=#001f00
 
-  " The active window's file name and filler is styled with User5 and User7.
+  " MescalineF4Empty fills the space after the path in the current window:
+  " the fg is the > color, and the bg is the filler color that follows.
   if !s:clock_enable
-    hi User5 guifg=#00dfff guibg=#005f00 ctermfg=239 ctermbg=255
+    hi MescalineF4Empty guifg=#00dfff guibg=#005f00 ctermfg=239 ctermbg=255
   else
-    hi User5 guifg=#333138 guibg=#005f00 ctermfg=239 ctermbg=255
+    hi MescalineF4Empty guifg=#333138 guibg=#005f00 ctermfg=239 ctermbg=255
   endif
   hi User7 guifg=#005f00 guibg=#dfff00 ctermfg=239 ctermbg=255
   if s:clock_enable
@@ -297,7 +298,7 @@ function! s:FetchStatusLineMain(active_window) abort
   endif
 
   if a:active_window
-    let l:statline .= "%5*"
+    let l:statline .= "%#MescalineF4Empty#"
   else
     let l:statline .= "%#MescalineF4NCEmpty#"
   endif
