@@ -223,7 +223,7 @@ function! s:FetchStatusLineMain(active_window) abort
     " For the '>  ... '
     let l:avail_width -= 5
   endif
-  " Account for spaces are filename and for transition highlight.
+  " Account for spaces for filename and for transition highlight.
   if a:active_window
     let l:avail_width -= 4
   else
@@ -287,7 +287,7 @@ function! s:FetchStatusLineMain(active_window) abort
   "else
   "  let l:statline .= "%#StatusLineNC#"
   "endif
-  " %=      split left-alighed and right-aligned
+  " %=      split left-aligned and right-aligned
   let l:statline .= "%="
 
   if a:active_window
