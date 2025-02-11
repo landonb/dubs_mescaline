@@ -54,15 +54,11 @@ function! g:embrace#mescaline#MescalineSetStatusLineHighlights() abort
   hi MescalineF1Mode guifg=#005f00 guibg=#dfff00 gui=BOLD ctermfg=22 ctermbg=190 cterm=BOLD
   hi MescalineF3Buffer guifg=#005f00 guibg=#00dfff gui=BOLD ctermfg=22 ctermbg=190 cterm=BOLD
 
-  " The MescalineF4NCEmpty and MescalineF5NCMetrics color are used to
-  " style the file name and extra empty space in inactive windows.
+  " MescalineF4NCEmpty fills the space after the path in not-current
+  " window. The fg is the > color, and bg is the filler color that follows.
   if !s:clock_enable
-    " MescalineF4NCEmpty fills the space after the path: the fg is the
-    " > color, and the bg is the filler color that follows.
     hi MescalineF4NCEmpty guifg=#00dfff guibg=#001f00 ctermfg=241 ctermbg=234
   else
-    " MescalineF4NCEmpty fills the space after the path: the fg is the
-    " > color, and the bg is the filler color that follows.
     hi MescalineF4NCEmpty guifg=#333138 guibg=#001f00
   endif
 
