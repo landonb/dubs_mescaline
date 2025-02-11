@@ -3,8 +3,7 @@
 " Project: https://github.com/landonb/dubs_mescaline#🍄
 " Summary: Wonderful Vim statusline interpretation.
 " Requires: Relies on tpope/fugitive and scrooloose/syntastic.
-" License: GPLv3
-" Copyright © 2009, 2015-2017 Landon Bouma.
+" License: GPLv3 | Copyright © 2009, 2015-2017, 2025 Landon Bouma.
 
 " -------------------------------------------------------------------
 
