@@ -60,13 +60,13 @@ function! g:embrace#mescaline#MescalineSetStatusLineHighlights() abort
     " MescalineF4NCEmpty fills the space after the path: the fg is the
     " > color, and the bg is the filler color that follows.
     hi MescalineF4NCEmpty guifg=#00dfff guibg=#001f00 ctermfg=241 ctermbg=234
-    hi User6 guifg=#001f00 guibg=#005f00 ctermfg=241 ctermbg=234
   else
     " MescalineF4NCEmpty fills the space after the path: the fg is the
     " > color, and the bg is the filler color that follows.
     hi MescalineF4NCEmpty guifg=#333138 guibg=#001f00
-    hi User6 guifg=#001f00 guibg=#005f00
   endif
+
+  hi User6 guifg=#001f00 guibg=#005f00 ctermfg=241 ctermbg=234
 
   hi MescalineNarrow guifg=#001f00 guibg=#001f00
 
