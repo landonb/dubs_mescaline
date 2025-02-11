@@ -468,12 +468,15 @@ function! s:MescalineStandUpStatusline()
   let s:ready_to_roll = 1
 endfunction
 
-"call s:MescalineStandUpStatusline()
-if exists("v:vim_did_enter") && v:vim_did_enter
-  call <SID>MescalineStandUpStatusline()
-else
-  " Weird. I don't think the original author really wanted to hook VimEnter...
-  "autocmd VimEnter * call <SID>on_window_changed('VimEnter')
-  autocmd VimEnter * call <SID>MescalineStandUpStatusline()
-endif
+function! g:embrace#mescaline#Setup() abort
+  if exists("v:vim_did_enter") && v:vim_did_enter
+    call s:MescalineStandUpStatusline()
+  else
+    augroup s:DubsMescaLineVimEnter
+      autocmd!
+
+      autocmd VimEnter * call <SID>MescalineStandUpStatusline()
+    augroup END
+  endif
+endfunction
 
