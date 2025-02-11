@@ -188,14 +188,7 @@ function! s:FetchStatusLineMain(active_window) abort
   endif
 
   " Add the Git branch.
-  " DPEND: Nerd Font:
-  "    󰊢          
-  "   󰽜    󰃸 󱓠 󰘭  
-  " Some icons author has tried:
-  "  let l:git_icon = get(g:, 'mescaline_git_icon', '')
-  "  let l:git_icon = get(g:, 'mescaline_git_icon', '⛬')
-  let l:git_icon = get(g:, 'mescaline_git_icon', '')
-  let l:statline .= "%{strlen(fugitive#statusline())>0?'\\ " .. l:git_icon .. "\\ ':''}"
+  let l:statline .= "%{strlen(fugitive#statusline())>0?'\\ " .. s:git_icon .. "\\ ':''}"
   " We can get the statusline, but I cannot figure out how to parse it.
   " E.g., this works:
   "   let l:statline .= "%{fugitive#statusline()}"
@@ -461,6 +454,15 @@ function! s:MescalineStandUpStatusline() abort
 endfunction
 
 function! g:embrace#mescaline#Setup() abort
+function! s:SetupOpts(opts = {}) abort
+  " DPEND: Nerd Font:   󰊢            󰽜    󰃸 󱓠 󰘭  
+  " - HSTRY: Some icons this plugin has tried:  ⛬ 
+  let s:git_icon = get(a:opts, 'git_icon', '')
+endfunction
+
+function! g:embrace#mescaline#Setup(opts = {}) abort
+  call s:SetupOpts(a:opts)
+
   if exists("v:vim_did_enter") && v:vim_did_enter
     call s:MescalineStandUpStatusline()
   else
