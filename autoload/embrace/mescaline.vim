@@ -46,8 +46,12 @@ function! g:embrace#mescaline#MescalineSetStatusLineHighlights() abort
   " and inactive windows and are used for the mode, git branch, and
   " cursor/line/column metrics. For the metrics, the colors are reversed
   " for the inactive windows, to help the user easily tell which window
-  " is active
-  hi User1 guifg=#dfff00 guibg=#005f00 gui=BOLD ctermfg=190 ctermbg=22 cterm=BOLD
+  " is active.
+  " - HSTRY: This plugin used to use User1, User2, ... User9 and the
+  "   corresponding statusline codes %1* %2* ... #9* but we'll use
+  "   custom names instead to not conflict with however else user
+  "   might use the user colors.
+  hi MescalineF2Branch guifg=#dfff00 guibg=#005f00 gui=BOLD ctermfg=190 ctermbg=22 cterm=BOLD
   hi User2 guifg=#005f00 guibg=#dfff00 gui=BOLD ctermfg=22 ctermbg=190 cterm=BOLD
   hi User3 guifg=#005f00 guibg=#00dfff gui=BOLD ctermfg=22 ctermbg=190 cterm=BOLD
 
@@ -196,9 +200,9 @@ function! s:FetchStatusLineMain(active_window) abort
   if a:active_window
     let l:statline .= "%2*"
     let l:statline .= "%2*%{g:embrace#mescaline#MescalineSetStatusLineMode()}"
-    let l:statline .= "%1*"
+    let l:statline .= "%#MescalineF2Branch#"
   else
-    let l:statline .= "%1*"
+    let l:statline .= "%#MescalineF2Branch#"
   endif
 
   " Add the Git branch.
