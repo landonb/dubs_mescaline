@@ -51,7 +51,7 @@ function! g:embrace#mescaline#MescalineSetStatusLineHighlights() abort
   "   custom names instead to not conflict with however else user
   "   might use the user colors.
   hi MescalineF2Branch guifg=#dfff00 guibg=#005f00 gui=BOLD ctermfg=190 ctermbg=22 cterm=BOLD
-  hi User2 guifg=#005f00 guibg=#dfff00 gui=BOLD ctermfg=22 ctermbg=190 cterm=BOLD
+  hi MescalineF1Mode guifg=#005f00 guibg=#dfff00 gui=BOLD ctermfg=22 ctermbg=190 cterm=BOLD
   hi User3 guifg=#005f00 guibg=#00dfff gui=BOLD ctermfg=22 ctermbg=190 cterm=BOLD
 
   " The User4 and User6 color are used to style the
@@ -197,8 +197,8 @@ function! s:FetchStatusLineMain(active_window) abort
   "   http://www.fileformat.info/info/unicode/category/So/list.htm
 
   if a:active_window
-    let l:statline .= "%2*"
-    let l:statline .= "%2*%{g:embrace#mescaline#MescalineSetStatusLineMode()}"
+    let l:statline .= "%#MescalineF1Mode#"
+    let l:statline .= "%#MescalineF1Mode#%{g:embrace#mescaline#MescalineSetStatusLineMode()}"
     let l:statline .= "%#MescalineF2Branch#"
   else
     let l:statline .= "%#MescalineF2Branch#"
@@ -345,7 +345,7 @@ function! s:FetchStatusLineMain(active_window) abort
   " Maybe if %l is 4 digits, add extra space after ☰?
   let l:statline .= "\\ ☰\\ %4l/%4L\\ :%3c"
 
-  let l:statline .= "%2*█"
+  let l:statline .= "%#MescalineF1Mode#█"
 
   return l:statline
 endfunction
