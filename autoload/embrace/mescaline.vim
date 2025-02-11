@@ -54,8 +54,8 @@ function! g:embrace#mescaline#MescalineSetStatusLineHighlights() abort
   hi MescalineF1Mode guifg=#005f00 guibg=#dfff00 gui=BOLD ctermfg=22 ctermbg=190 cterm=BOLD
   hi MescalineF3Buffer guifg=#005f00 guibg=#00dfff gui=BOLD ctermfg=22 ctermbg=190 cterm=BOLD
 
-  " The MescalineF4NCEmpty and User6 color are used to style the
-  " file name and extra empty space in inactive windows.
+  " The MescalineF4NCEmpty and MescalineF5NCMetrics color are used to
+  " style the file name and extra empty space in inactive windows.
   if !s:clock_enable
     " MescalineF4NCEmpty fills the space after the path: the fg is the
     " > color, and the bg is the filler color that follows.
@@ -66,7 +66,7 @@ function! g:embrace#mescaline#MescalineSetStatusLineHighlights() abort
     hi MescalineF4NCEmpty guifg=#333138 guibg=#001f00
   endif
 
-  hi User6 guifg=#001f00 guibg=#005f00 ctermfg=241 ctermbg=234
+  hi MescalineF5NCMetrics guifg=#001f00 guibg=#005f00 ctermfg=241 ctermbg=234
 
   hi MescalineNarrow guifg=#001f00 guibg=#001f00
 
@@ -317,7 +317,7 @@ function! s:FetchStatusLineMain(active_window) abort
   if a:active_window
     let l:statline .= "%7*"
   else
-    let l:statline .= "%6*"
+    let l:statline .= "%#MescalineF5NCMetrics#"
   endif
   let l:statline .= ""
 
