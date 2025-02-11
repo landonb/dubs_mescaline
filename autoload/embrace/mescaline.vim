@@ -36,7 +36,7 @@
 " contains hooks to any style functions.
 let s:ready_to_roll = 0
 
-function! g:embrace#mescaline#MescalineSetStatusLineHighlights()
+function! g:embrace#mescaline#MescalineSetStatusLineHighlights() abort
   " NOTE: To make the best use of the Powerline glyphs, alternate
   " foregrounds and backgrounds between adjacent colors, which has
   " the trick of making if look like we specially drew the status
@@ -66,7 +66,7 @@ function! g:embrace#mescaline#MescalineSetStatusLineHighlights()
   "   by looking at the cursor. It was a cute trick, though.
 endfunction
 
-function! g:embrace#mescaline#MescalineSetStatusLineMode()
+function! g:embrace#mescaline#MescalineSetStatusLineMode() abort
   let l:cmode = mode(1)
   let l:mode0 = s:omode
   let s:omode = l:cmode
@@ -96,7 +96,7 @@ function! g:embrace#mescaline#MescalineSetStatusLineMode()
   endif
 endfunction
 
-function! g:embrace#mescaline#TickleStatusLineMode(timer_id)
+function! g:embrace#mescaline#TickleStatusLineMode(timer_id) abort
   " Set statusline= again, which'll trigger a refresh.
   call s:SetStatusLine(0)
 endfunction
@@ -144,14 +144,14 @@ let s:vim_mode_lookup = {
   \ "t":       "TRMNAL",
 \ }
 
-function! s:ModeFriendlyString(mode)
+function! s:ModeFriendlyString(mode) abort
   return get(s:vim_mode_lookup, a:mode, "NOTFND")
 endfunction
 
 " MAYBE/2017-12-05: This function is called often.
 "   Can we cache lookup of { winnr => active? }
 "   and return immediately if no change needed?
-function! s:FetchStatusLineMain(active_window)
+function! s:FetchStatusLineMain(active_window) abort
   " Start with an empty statusline. We build a string, rather than
   " calling `set statusline+=`, so that we can build the statusline
   " differently based on the window width.
@@ -330,7 +330,7 @@ function! s:FetchStatusLineMain(active_window)
   return l:statline
 endfunction
 
-function! s:SetStatusLine(nr)
+function! s:SetStatusLine(nr) abort
   " If not the active window, switch to it, so we can call setlocal.
   let l:orig_nr = winnr()
   if a:nr > 0 && a:nr != l:orig_nr
@@ -362,13 +362,13 @@ function! s:SetStatusLine(nr)
   endif
 endfunction
 
-function! g:embrace#mescaline#MescalineFetchStatusLineGitBranch()
+function! g:embrace#mescaline#MescalineFetchStatusLineGitBranch() abort
   return matchstr(fugitive#statusline(),'(\zs.*\ze)')
 endfunction
 
 let s:oldnr = -1
 let s:omode = ''
-function! s:on_window_changed(event_name)
+function! s:on_window_changed(event_name) abort
   "echom 'on_window_changed: on ' . a:event_name
   if s:ready_to_roll == 0
     return
@@ -428,7 +428,7 @@ function! s:on_window_changed(event_name)
   "echom 'Done on_window_changed: curnr: ' . l:curnr . ' / mrunr: ' l:mrunr
 endfunction
 
-function! s:MescalineStandUpStatusline()
+function! s:MescalineStandUpStatusline() abort
   call g:embrace#mescaline#MescalineSetStatusLineHighlights()
 
   " You won't need to see the mode twice, veritically adjacent one another.
