@@ -79,7 +79,7 @@ function! g:embrace#mescaline#MescalineSetStatusLineHighlights() abort
   hi MescalineF5Metrics guifg=#005f00 guibg=#dfff00 ctermfg=239 ctermbg=255
 
   if s:clock_enable
-    hi User8 guifg=#005f00 guibg=#52B788 | hi User9 guifg=#52B788 guibg=#333138
+    hi MescalineF3Clock guifg=#005f00 guibg=#52B788 | hi User9 guifg=#52B788 guibg=#333138
   endif
 
   " 2017-12-06: The original code that I copied changed the highlight
@@ -224,8 +224,8 @@ function! s:FetchStatusLineMain(active_window) abort
   if !s:clock_enable
     let l:statline .= "\\ %#MescalineF3Buffer#\\ "
   else
-    let l:statline .= "\\ %8*\\ "
-    let l:statline .= "%8*"
+    let l:statline .= "\\ %#MescalineF3Clock#\\ "
+    let l:statline .= "%#MescalineF3Clock#"
     let l:statline .= '%{g:embrace#mescaline#MescalinePrintClockTime()}'
     let l:statline .= "\\ %9*\\ "
   endif
