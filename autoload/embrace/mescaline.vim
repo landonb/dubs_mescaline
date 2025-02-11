@@ -61,9 +61,9 @@ function! g:embrace#mescaline#MescalineSetStatusLineHighlights() abort
   hi User7 guifg=#005f00 guibg=#dfff00 ctermfg=239 ctermbg=255
 
   " 2017-12-06: The original code that I copied changed the highlight
-  "   of the mode text depending on the mode, but that's really distracting,
-  "   and seeing the mode name is not a big deal, as you can infer the mode
-  "   by looking at the cursor. It was a cute trick, though.
+  "   of the mode text depending on the mode, but I find that distracting.
+  "   And seeing the mode name is not a big deal, as you can usually infer
+  "   the mode by looking at the cursor. It's a nifty trick, though.
 endfunction
 
 function! g:embrace#mescaline#MescalineSetStatusLineMode() abort
