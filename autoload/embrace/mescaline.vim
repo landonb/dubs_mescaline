@@ -42,11 +42,10 @@ function! g:embrace#mescaline#MescalineSetStatusLineHighlights() abort
   " the trick of making if look like we specially drew the status
   " line and didn't just use font and color magic.
 
-  " The User1, User2, and User3 colors and shared between the active
-  " and inactive windows and are used for the mode, git branch, and
-  " cursor/line/column metrics. For the metrics, the colors are reversed
-  " for the inactive windows, to help the user easily tell which window
-  " is active.
+  " The highlight colors are shared between the active and inactive
+  " windows, and are used for the mode, git branch, and cursor/line/column
+  " metrics. For the metrics, the colors are reversed for the inactive
+  " windows, to help the user easily tell which window is active.
   " - HSTRY: This plugin used to use User1, User2, ... User9 and the
   "   corresponding statusline codes %1* %2* ... #9* but we'll use
   "   custom names instead to not conflict with however else user
@@ -171,7 +170,7 @@ function! s:FetchStatusLineMain(active_window) abort
   " differently based on the window width.
   let l:statline=''
 
-  " NOTE: There are two ways to set color, e.g.,
+  " REFER: There are two ways to set color, e.g.,
   "   Using User1 .. User9:
   "     set statusline+=%2*       " Switch to color `User2`.
   "   Using any named highlight:
