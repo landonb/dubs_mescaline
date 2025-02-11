@@ -37,7 +37,7 @@
 " contains hooks to any style functions.
 let s:ready_to_roll = 0
 
-function! MescalineSetStatusLineHighlights()
+function! g:embrace#mescaline#MescalineSetStatusLineHighlights()
   " NOTE: To make the best use of the Powerline glyphs, alternate
   " foregrounds and backgrounds between adjacent colors, which has
   " the trick of making if look like we specially drew the status
@@ -67,7 +67,7 @@ function! MescalineSetStatusLineHighlights()
   "   by looking at the cursor. It was a cute trick, though.
 endfunction
 
-function! MescalineSetStatusLineMode()
+function! g:embrace#mescaline#MescalineSetStatusLineMode()
   let l:cmode = mode(1)
   let l:mode0 = s:omode
   let s:omode = l:cmode
@@ -82,13 +82,13 @@ function! MescalineSetStatusLineMode()
     "   call timer_start(125, <SID>.'TickleStatusLineMode') " 'unrecognized'
     " And note that with 'let', you don't use 'call', or hell breaks loose.
     if has("timers")
-      call timer_start(125, 'TickleStatusLineMode')
-      let l:timer_id = timer_start(125, 'TickleStatusLineMode')
+      call timer_start(125, 'g:embrace#mescaline#TickleStatusLineMode')
+      let l:timer_id = timer_start(125, 'g:embrace#mescaline#TickleStatusLineMode')
     else
       " Not +timers.
       " So... there doesn't seem to be an issue without +timers.
       "   2018-01-29 21:24: Or perhaps it's the machine I'm on.
-      call TickleStatusLineMode(0)
+      call g:embrace#mescaline#TickleStatusLineMode(0)
     end
     "echom 'Skipping Statusline to avoid flashing.'
     return s:ModeFriendlyString(l:mode0)
@@ -97,7 +97,7 @@ function! MescalineSetStatusLineMode()
   endif
 endfunction
 
-function! TickleStatusLineMode(timer_id)
+function! g:embrace#mescaline#TickleStatusLineMode(timer_id)
   " Set statusline= again, which'll trigger a refresh.
   call s:SetStatusLine(0)
 endfunction
@@ -186,7 +186,7 @@ function! s:FetchStatusLineMain(active_window)
 
   if a:active_window
     let l:statline .= "%2*"
-    let l:statline .= "%2*%{MescalineSetStatusLineMode()}"
+    let l:statline .= "%2*%{g:embrace#mescaline#MescalineSetStatusLineMode()}"
     let l:statline .= "%1*"
   else
     let l:statline .= "%1*"
@@ -202,7 +202,7 @@ function! s:FetchStatusLineMain(active_window)
   " But adding the matchstr(...) to statusline, even trying different
   "   escaping for the glob, fails.
   " Fortunately, we can just make is a callback.
-  let l:statline .= '%{MescalineFetchStatusLineGitBranch()}'
+  let l:statline .= '%{g:embrace#mescaline#MescalineFetchStatusLineGitBranch()}'
 
   let l:statline .= "\\ %3*\\ "
 
@@ -363,7 +363,7 @@ function! s:SetStatusLine(nr)
   endif
 endfunction
 
-function! MescalineFetchStatusLineGitBranch()
+function! g:embrace#mescaline#MescalineFetchStatusLineGitBranch()
   return matchstr(fugitive#statusline(),'(\zs.*\ze)')
 endfunction
 
@@ -430,7 +430,7 @@ function! s:on_window_changed(event_name)
 endfunction
 
 function! s:MescalineStandUpStatusline()
-  call MescalineSetStatusLineHighlights()
+  call g:embrace#mescaline#MescalineSetStatusLineHighlights()
 
   " You won't need to see the mode twice, veritically adjacent one another.
   " - We put the mode in our MescaLine, so omit from the Vim status line.
@@ -462,7 +462,7 @@ function! s:MescalineStandUpStatusline()
     autocmd VimResized * call <SID>on_window_changed('VimResized')
 
     " Reset the highlights after a :colorscheme change.
-    autocmd ColorScheme * call MescalineSetStatusLineHighlights()
+    autocmd ColorScheme * call g:embrace#mescaline#MescalineSetStatusLineHighlights()
   augroup END
 
   let s:ready_to_roll = 1
