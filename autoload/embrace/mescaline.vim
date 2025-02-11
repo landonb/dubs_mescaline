@@ -53,12 +53,26 @@ function! g:embrace#mescaline#MescalineSetStatusLineHighlights() abort
 
   " The User4 and User6 color are used to style the
   " file name and extra empty space in inactive windows.
-  hi User4 guifg=#00dfff guibg=#001f00 ctermfg=241 ctermbg=234
-  hi User6 guifg=#001f00 guibg=#005f00 ctermfg=241 ctermbg=234
+  if !s:clock_enable
+    hi User4 guifg=#00dfff guibg=#001f00 ctermfg=241 ctermbg=234
+    hi User6 guifg=#001f00 guibg=#005f00 ctermfg=241 ctermbg=234
+  else
+    hi User4 guifg=#333138 guibg=#001f00
+    hi User6 guifg=#001f00 guibg=#005f00
+  endif
+
+  hi MescalineNarrow guifg=#001f00 guibg=#001f00
 
   " The active window's file name and filler is styled with User5 and User7.
-  hi User5 guifg=#00dfff guibg=#005f00 ctermfg=239 ctermbg=255
+  if !s:clock_enable
+    hi User5 guifg=#00dfff guibg=#005f00 ctermfg=239 ctermbg=255
+  else
+    hi User5 guifg=#333138 guibg=#005f00 ctermfg=239 ctermbg=255
+  endif
   hi User7 guifg=#005f00 guibg=#dfff00 ctermfg=239 ctermbg=255
+  if s:clock_enable
+    hi User8 guifg=#005f00 guibg=#52B788 | hi User9 guifg=#52B788 guibg=#333138
+  endif
 
   " 2017-12-06: The original code that I copied changed the highlight
   "   of the mode text depending on the mode, but I find that distracting.
@@ -199,7 +213,14 @@ function! s:FetchStatusLineMain(active_window) abort
   " Fortunately, we can just make is a callback.
   let l:statline .= '%{g:embrace#mescaline#MescalineFetchStatusLineGitBranch()}'
 
-  let l:statline .= "\\ %3*\\ "
+  if !s:clock_enable
+    let l:statline .= "\\ %3*\\ "
+  else
+    let l:statline .= "\\ %8*\\ "
+    let l:statline .= "%8*"
+    let l:statline .= '%{g:embrace#mescaline#MescalinePrintClockTime()}'
+    let l:statline .= "\\ %9*\\ "
+  endif
 
   let l:avail_width = winwidth(0)
   if a:active_window
@@ -216,6 +237,12 @@ function! s:FetchStatusLineMain(active_window) abort
     " For the '>  ... '
     let l:avail_width -= 5
   endif
+
+  " Account for the clock "hh:mm"
+  if s:clock_enable
+    let l:avail_width -= 5
+  endif
+
   " Account for spaces for filename and for transition highlight.
   if a:active_window
     let l:avail_width -= 4
@@ -273,6 +300,10 @@ function! s:FetchStatusLineMain(active_window) abort
   endif
   let l:statline .= ""
 
+  if l:avail_width <= 0
+    let l:statline = ''
+    let l:statline .= "\\ %#MescalineNarrow#\\ "
+  endif
   " %=  split left-aligned and right-aligned
   let l:statline .= "%="
 
@@ -350,6 +381,10 @@ endfunction
 
 function! g:embrace#mescaline#MescalineFetchStatusLineGitBranch() abort
   return matchstr(fugitive#statusline(),'(\zs.*\ze)')
+endfunction
+
+function! g:embrace#mescaline#MescalinePrintClockTime() abort
+  return strftime('%H:%M')
 endfunction
 
 let s:oldnr = -1
@@ -450,16 +485,38 @@ function! s:MescalineStandUpStatusline() abort
     autocmd ColorScheme * call g:embrace#mescaline#MescalineSetStatusLineHighlights()
   augroup END
 
+  if get(s:, 'timer', 0)
+    call timer_stop(s:timer)
+
+    unlet! s:timer
+  endif
+
+  if s:clock_enable
+    let s:timer = timer_start(s:clock_rate, 'g:embrace#mescaline#MescalineUpdateStatusline', { 'repeat': -1 })
+  endif
+
   let s:ready_to_roll = 1
 endfunction
 
-function! g:embrace#mescaline#Setup() abort
+function! g:embrace#mescaline#MescalineUpdateStatusline(timer_id) abort
+  " BWARE: This causes status line and window title to blip every second:
+  "   call s:on_window_changed('timer')
+  " WORKS: And somehow updates *all* windows' status lines.
+  call s:SetStatusLine(0)
+endfunction
+
 function! s:SetupOpts(opts = {}) abort
+  let s:clock_enable = get(a:opts, 'clock_enable', 0)
+  let s:clock_rate = get(a:opts, 'clock_rate', 1000)
   " DPEND: Nerd Font:   󰊢            󰽜    󰃸 󱓠 󰘭  
   " - HSTRY: Some icons this plugin has tried:  ⛬ 
   let s:git_icon = get(a:opts, 'git_icon', '')
 endfunction
 
+" USAGE: E.g.,
+"   call g:embrace#mescaline#Setup({'clock_enable': 1})
+" Defaults:
+"   call g:embrace#mescaline#Setup({'clock_enable': 0, 'clock_rate': 1000, 'git_icon': ''})
 function! g:embrace#mescaline#Setup(opts = {}) abort
   call s:SetupOpts(a:opts)
 
