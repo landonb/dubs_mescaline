@@ -37,12 +37,12 @@
 let s:ready_to_roll = 0
 
 function! g:embrace#mescaline#MescalineSetStatusLineHighlights() abort
-  " NOTE: To make the best use of the Powerline glyphs, alternate
+  " SAVVY: To make the best use of the Powerline glyphs, alternate
   " foregrounds and backgrounds between adjacent colors, which has
   " the trick of making if look like we specially drew the status
   " line and didn't just use font and color magic.
-
-  " The highlight colors are shared between the active and inactive
+  "
+  " SAVVY: The highlight colors are shared between the active and inactive
   " windows, and are used for the mode, git branch, and cursor/line/column
   " metrics. For the metrics, the colors are reversed for the inactive
   " windows, to help the user easily tell which window is active.
@@ -50,6 +50,10 @@ function! g:embrace#mescaline#MescalineSetStatusLineHighlights() abort
   "   corresponding statusline codes %1* %2* ... #9* but we'll use
   "   custom names instead to not conflict with however else user
   "   might use the user colors.
+  "
+  " DUNNO: When does (Neo)Vim fallback ctermfg/ctermbg?
+  " - The statusline looks same in terminal as in GUI to me.
+
   hi MescalineF2Branch guifg=#dfff00 guibg=#005f00 gui=BOLD ctermfg=190 ctermbg=22 cterm=BOLD
   hi MescalineF1Mode guifg=#005f00 guibg=#dfff00 gui=BOLD ctermfg=22 ctermbg=190 cterm=BOLD
   hi MescalineF3Buffer guifg=#005f00 guibg=#00dfff gui=BOLD ctermfg=22 ctermbg=190 cterm=BOLD
