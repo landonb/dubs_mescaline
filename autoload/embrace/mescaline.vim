@@ -52,7 +52,7 @@ function! g:embrace#mescaline#MescalineSetStatusLineHighlights() abort
   "   might use the user colors.
   hi MescalineF2Branch guifg=#dfff00 guibg=#005f00 gui=BOLD ctermfg=190 ctermbg=22 cterm=BOLD
   hi MescalineF1Mode guifg=#005f00 guibg=#dfff00 gui=BOLD ctermfg=22 ctermbg=190 cterm=BOLD
-  hi User3 guifg=#005f00 guibg=#00dfff gui=BOLD ctermfg=22 ctermbg=190 cterm=BOLD
+  hi MescalineF3Buffer guifg=#005f00 guibg=#00dfff gui=BOLD ctermfg=22 ctermbg=190 cterm=BOLD
 
   " The User4 and User6 color are used to style the
   " file name and extra empty space in inactive windows.
@@ -217,7 +217,7 @@ function! s:FetchStatusLineMain(active_window) abort
   let l:statline .= '%{g:embrace#mescaline#MescalineFetchStatusLineGitBranch()}'
 
   if !s:clock_enable
-    let l:statline .= "\\ %3*\\ "
+    let l:statline .= "\\ %#MescalineF3Buffer#\\ "
   else
     let l:statline .= "\\ %8*\\ "
     let l:statline .= "%8*"
