@@ -76,10 +76,6 @@ function! g:embrace#mescaline#MescalineSetStatusLineMode() abort
     "   to Normal mode and then back to Insert. (I have no idea way.)
     " As such, set a timer and wait to check if user really did switch modes.
     "   https://github.com/vim/vim/blob/master/runtime/doc/version8.txt#L66
-    " Note that using s:/<SID> doesn't work here:
-    "   call timer_start(125, 's:TickleStatusLineMode')     " no 'script context'
-    "   call timer_start(125, <SID>.'TickleStatusLineMode') " 'unrecognized'
-    " And note that with 'let', you don't use 'call', or hell breaks loose.
     if has("timers")
       call timer_start(125, 'g:embrace#mescaline#TickleStatusLineMode')
       let l:timer_id = timer_start(125, 'g:embrace#mescaline#TickleStatusLineMode')
@@ -212,9 +208,6 @@ function! s:FetchStatusLineMain(active_window) abort
 
   let l:statline .= "\\ %3*\\ "
 
-" FIXME/2017-12-06 00:24: Make s:bool's for each option, and
-" then do this automatically based on if bool is enabled
-" (and only add to statusline if bool enabled, 'natch).
   let l:avail_width = winwidth(0)
   if a:active_window
     " Remove 8 characters for the mode status.
@@ -287,14 +280,7 @@ function! s:FetchStatusLineMain(active_window) abort
   endif
   let l:statline .= ""
 
-  " Meh. I thought about honoring StatusLine, but since we use the
-  " Powerline glyphs, we need to make sure adjacent highlights match.
-  "if a:active_window
-  "  let l:statline .= "%#StatusLine#"
-  "else
-  "  let l:statline .= "%#StatusLineNC#"
-  "endif
-  " %=      split left-aligned and right-aligned
+  " %=  split left-aligned and right-aligned
   let l:statline .= "%="
 
   if a:active_window
