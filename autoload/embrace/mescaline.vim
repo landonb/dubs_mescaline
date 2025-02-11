@@ -192,7 +192,14 @@ function! s:FetchStatusLineMain(active_window) abort
   endif
 
   " Add the Git branch.
-  let l:statline .= "%{strlen(fugitive#statusline())>0?'\\ \\ ':''}"
+  " DPEND: Nerd Font:
+  "    󰊢          
+  "   󰽜    󰃸 󱓠 󰘭  
+  " Some icons author has tried:
+  "  let l:git_icon = get(g:, 'mescaline_git_icon', '')
+  "  let l:git_icon = get(g:, 'mescaline_git_icon', '⛬')
+  let l:git_icon = get(g:, 'mescaline_git_icon', '')
+  let l:statline .= "%{strlen(fugitive#statusline())>0?'\\ " .. l:git_icon .. "\\ ':''}"
   " We can get the statusline, but I cannot figure out how to parse it.
   " E.g., this works:
   "   let l:statline .= "%{fugitive#statusline()}"
