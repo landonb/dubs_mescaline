@@ -226,7 +226,6 @@ function! s:FetchStatusLineMain(active_window) abort
     let l:statline .= "\\ %#MescalineF3Buffer#\\ "
   else
     let l:statline .= "\\ %#MescalineF3Clock#\\ "
-    let l:statline .= "%#MescalineF3Clock#"
     let l:statline .= '%{g:embrace#mescaline#MescalinePrintClockTime()}'
     let l:statline .= "\\ %#MescalineF4Buffer#\\ "
   endif
