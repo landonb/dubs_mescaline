@@ -68,6 +68,7 @@ function! g:embrace#mescaline#MescalineSetStatusLineHighlights() abort
 
   " MescalineF4Empty fills the space after the path in the current window:
   " the fg is the > color, and the bg is the filler color that follows.
+  " (It's the 4th field if no clock, of fifth field if clock showing.)
   if !s:clock_enable
     hi MescalineF4Empty guifg=#00dfff guibg=#005f00 ctermfg=239 ctermbg=255
   else
