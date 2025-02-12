@@ -404,6 +404,7 @@ let s:omode = ''
 function! s:on_window_changed(event_name) abort
   "echom 'on_window_changed: on ' . a:event_name
   if s:ready_to_roll == 0
+
     return
   endif
 
