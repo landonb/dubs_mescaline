@@ -463,6 +463,30 @@ function! s:on_window_changed(event_name) abort
 endfunction
 
 function! s:MescalineStandUpStatusline() abort
+  let s:ready_to_roll = 0
+
+  if get(s:, 'timer', 0)
+    call timer_stop(s:timer)
+
+    unlet! s:timer
+  endif
+
+  if s:mescaline_disable
+    autocmd! <SID>DubsMescaLine
+
+    let l:orig_nr = winnr()
+
+    windo set statusline=
+
+    if winnr() != l:orig_nr
+      execute l:orig_nr . "wincmd w"
+    endif
+
+    return
+  endif
+
+  " ***
+
   call g:embrace#mescaline#MescalineSetStatusLineHighlights()
 
   " You won't need to see the mode twice, veritically adjacent one another.
@@ -498,12 +522,6 @@ function! s:MescalineStandUpStatusline() abort
     autocmd ColorScheme * call g:embrace#mescaline#MescalineSetStatusLineHighlights()
   augroup END
 
-  if get(s:, 'timer', 0)
-    call timer_stop(s:timer)
-
-    unlet! s:timer
-  endif
-
   if s:clock_enable
     let s:timer = timer_start(s:clock_rate, 'g:embrace#mescaline#MescalineUpdateStatusline', { 'repeat': -1 })
   endif
@@ -519,6 +537,8 @@ function! g:embrace#mescaline#MescalineUpdateStatusline(timer_id) abort
 endfunction
 
 function! s:SetupOpts(opts = {}) abort
+  let s:mescaline_disable = get(a:opts, 'mescaline_disable', 0)
+
   let s:clock_enable = get(a:opts, 'clock_enable', 0)
   let s:clock_rate = get(a:opts, 'clock_rate', 1000)
   " DPEND: Nerd Font:   󰊢            󰽜    󰃸 󱓠 󰘭  
