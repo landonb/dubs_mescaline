@@ -527,6 +527,9 @@ function! s:MescalineStandUpStatusline() abort
   endif
 
   let s:ready_to_roll = 1
+
+  " Update now, otherwise statusline won't appear until user interaction.
+  call s:SetStatusLine(0)
 endfunction
 
 function! g:embrace#mescaline#MescalineUpdateStatusline(timer_id) abort
