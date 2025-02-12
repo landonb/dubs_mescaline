@@ -1,8 +1,6 @@
-############################
-Dubs Vim |em_dash| Mescaline
-############################
-
-.. |em_dash| unicode:: 0x2014 .. em dash
+#################
+Dubs Mescaline 🍄
+#################
 
 Clean, vibrant Vim status line.
 
