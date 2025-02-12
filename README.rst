@@ -6,25 +6,28 @@ Clean, vibrant Vim status line.
 
 .. image:: doc/status-line-test-ruby-and-javascript.png
 
-*The Dubs Mescaline status line and* `Dubs After Dark <https://github.com/landonb/dubs_mescaline>`__ *color scheme.*
+*The Dubs Mescaline status line pairs well with the*
+`Dubs After Dark <https://github.com/landonb/dubs_mescaline>`__
+*color scheme.*
 
 About This Plugin
 =================
 
-This plugin provides a simple, elegant status line:
+This plugin provides a simple, feature-rich status line:
 
-- Shows [Vim mode] > [Git branch] > [File name + flags] > [Cursor info]
+- Shows [Vim mode] > [Git branch] > [(Optional) Clock] > [File name + flags] > [Cursor/File metrics]
 
 - Utilizes the awesome `Powerline font <https://github.com/powerline/fonts>`__
   to render a clean, vibrant status line.
 
   - If you're looking for a great font that includes the Powerline
-    glyphs, check out `Hack <https://github.com/source-foundry/Hack>`__,
-    "a typeface designed for source code."
+    glyphs, check out
+    `Hack Nerd Font <https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/Hack>`__,
+    "A typeface designed for source code."
 
-- Single file plugin; easy to hack.
+- This plugin is a single ``autoload`` file that's easy to grok and hack.
 
-- Inspired by other great plugins that just didn't cut it for me:
+- Inspired by these other great plugins:
 
   `Powerline
   <https://github.com/powerline/powerline>`__
@@ -35,51 +38,73 @@ This plugin provides a simple, elegant status line:
   `lightline
   <https://github.com/itchyny/lightline.vim>`__
 
-- See also Tim Pope's
-  `vim-flagship <https://github.com/tpope/vim-flagship>`__
+  `lualine.nvim
+  <https://github.com/nvim-lualine/lualine.nvim>`__
+
+  `vim-flagship
+  <https://github.com/tpope/vim-flagship>`__
+
+  - But I baked my own because I didn't want anything fancy,
+    and I wanted to add a clock.
+
+Configuration
+=============
+
+This plugin is inactive by default.
+
+Call its ``Setup({opts})`` function to start and stop it.
+
+E.g., here's how you might install and configure the plugin
+from Lua using |lazy.nvim|_::
+
+  {
+    "landonb/dubs_mescaline",
+
+    config = function()
+      -- These are the default values if you
+      -- don't specify them.
+
+      vim.fn['embrace#mescaline#Setup']({
+        clock_enable = 1,
+        clock_rate = 2500,
+        git_icon = '',
+      })
+    end,
+  },
+
+Or from your ``.vimrc``::
+
+  " These are the default values if you
+  " don't specify them.
+  call g:embrace#mescaline#Setup({
+    \ 'clock_enable': 1,
+    \ 'clock_rate': 2500,
+    \ 'git_icon': '',
+    \ })
+
+Some notes:
+
+- You'll notice that the ``git_icon`` symbol probably does not render in your
+  browser. But it should render in (Neo)Vim if you use a font from
+  `Nerd Fonts <https://github.com/ryanoasis/nerd-fonts/>`__. (Or you can pick
+  your own character.)
+
+- When ``clock_enable`` is truthy, the ``clock_rate`` controls how often the
+  background timer runs. The background timer is used to update the status
+  bar clock, so that if you're not using (Neo)Vim, the clock still updates
+  (otherwise Vim only refreshes the status line when you interact with the
+  buffer). If you set a longer clock rate, the status line clock may not
+  update for that many milliseconds after the minute changes.
 
 Installation
 ============
 
-Installation is easy using the packages feature (see ``:help packages``).
+Install this plugin like you would any Neovim or Vim plugin —
+probably using |lazy.nvim|_ or |vim-plug|_.
 
-To install the package so that it will automatically load on Vim startup,
-use a ``start`` directory, e.g.,
+.. |lazy.nvim| replace:: ``lazy.nvim``
+.. _lazy.nvim: https://github.com/folke/lazy.nvim
 
-.. code-block:: bash
-
-    mkdir -p ~/.vim/pack/landonb/start
-    cd ~/.vim/pack/landonb/start
-
-If you want to test the package first, make it optional instead
-(see ``:help pack-add``):
-
-.. code-block:: bash
-
-    mkdir -p ~/.vim/pack/landonb/opt
-    cd ~/.vim/pack/landonb/opt
-
-Clone the project to the desired path:
-
-.. code-block:: bash
-
-    git clone https://github.com/landonb/dubs_mescaline.git
-
-If you installed to the optional path, tell Vim to load the package:
-
-.. code-block:: vim
-
-   :packadd! dubs_mescaline
-
-Just once, tell Vim to build the online help:
-
-.. code-block:: vim
-
-   :Helptags
-
-Then whenever you want to reference the help from Vim, run:
-
-.. code-block:: vim
-
-   :help dubs-mescaline
+.. |vim-plug| replace:: ``vim-plug``
+.. _vim-plug: https://github.com/junegunn/vim-plug
 
