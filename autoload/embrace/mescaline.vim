@@ -214,17 +214,11 @@ function! s:FetchStatusLineMain(active_window) abort
     let l:statline .= "%#MescalineF2Branch#"
   endif
 
+  let l:git_head = g:embrace#mescaline#MescalineFetchStatusLineGitBranch()
+
   " Add the Git branch.
-  let l:statline .= "%{strlen(fugitive#statusline())>0?'\\ " .. s:git_icon .. "\\ ':''}"
-  " We can get the statusline, but I cannot figure out how to parse it.
-  " E.g., this works:
-  "   let l:statline .= "%{fugitive#statusline()}"
-  " And this works if you run it:
-  "   echo matchstr(fugitive#statusline(),'(\zs.*\ze)')
-  " But adding the matchstr(...) to statusline, even trying different
-  "   escaping for the glob, fails.
-  " Fortunately, we can just make is a callback.
-  let l:statline .= '%{g:embrace#mescaline#MescalineFetchStatusLineGitBranch()}'
+  let l:statline .= l:git_head != '' ? "\\ " .. s:git_icon .. "\\ " : ''
+  let l:statline .= l:git_head
 
   if !s:clock_enable
     let l:statline .= "\\ %#MescalineF3Buffer#\\ "
@@ -243,9 +237,8 @@ function! s:FetchStatusLineMain(active_window) abort
   "   let l:avail_width -= 16
   " Remove ' 61% ☰ 1234/1234 : 123 '
   let l:avail_width -= 23
-  if strlen(fugitive#statusline()) > 0
-    " tpope's fugitive returns, e.g., [Git(master)]
-    let l:avail_width -= (strlen(fugitive#statusline()) - 7)
+  if l:git_head != ''
+    let l:avail_width -= strlen(l:git_head)
     " For the '>  ... '
     let l:avail_width -= 5
   endif
@@ -391,6 +384,7 @@ function! s:SetStatusLine(nr) abort
   endif
 endfunction
 
+" tpope's fugitive returns, e.g., "[Git(master)]"
 function! g:embrace#mescaline#MescalineFetchStatusLineGitBranch() abort
   return matchstr(fugitive#statusline(),'(\zs.*\ze)')
 endfunction
