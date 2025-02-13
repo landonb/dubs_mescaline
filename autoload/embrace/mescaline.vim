@@ -171,40 +171,42 @@ function! s:ModeFriendlyString(mode) abort
   return get(s:vim_mode_lookup, a:mode, "NOTFND")
 endfunction
 
-" MAYBE/2017-12-05: This function is called often.
-"   Can we cache lookup of { winnr => active? }
-"   and return immediately if no change needed?
+" REFER: There are two ways to set color, e.g.,
+"   Using User1 .. User9:
+"     set statusline+=%2*       " Switch to color `User2`.
+"   Using any named highlight:
+"     set statusline+=%#todo#   " Switch to `todo` highlight.
+
+" You can insert a unicode character easily from Insert mode, e.g.,:
+"   <C-q> u21D2
+" Note that Hack font includes 7 of 36 Powerline glyphs.
+"   https://github.com/ryanoasis/powerline-extra-symbols#glyphs
+" Hack includes these Powerline glyphs:
+"   e0a0       " a branch symbol
+"   e0a1       " an L/N symbol
+"   e0a2       " a lock symbol
+"   e0b0       " a solid right-half of a diamond
+"   e0b1       " an outline of a right-half of a diamond
+"   e0b2       " a solid left-half of a diamond
+"   e0b3       " an outline of a left-half of a diamond
+" Note that there's an aggregate font, Nerd Fonts, which seems awesome
+" — it includes all of the Powerline glyphs, for one — but there's a
+" 1-pixel space at the edge of each Powerline glyph. Bah.
+" [2025-02-13: I've been using Nerd Font recently and have not
+"  noticed this 1-pixel artifact.]
+" Note also that the Powerline glyphs are not actual Unicode.
+"   http://www.fileformat.info/info/unicode/char/e0b0/index.htm
+" The 'Symbol, Other' category has good unicode.
+"   http://www.fileformat.info/info/unicode/category/So/list.htm
+
+" Meh — We use inline %{callback} functions to build parts of the status
+" line, but they're unnecessary because this plugin always rebuilds
+" &statusline. (And note we cannot set-and-forget &statusline and rely on
+" the callbacks because some of the string is formatted based on the widths
+" of other parts of it, e.g., see how l:avail_width is used below.)
+
 function! s:FetchStatusLineMain(active_window) abort
-  " Start with an empty statusline. We build a string, rather than
-  " calling `set statusline+=`, so that we can build the statusline
-  " differently based on the window width.
   let l:statline=''
-
-  " REFER: There are two ways to set color, e.g.,
-  "   Using User1 .. User9:
-  "     set statusline+=%2*       " Switch to color `User2`.
-  "   Using any named highlight:
-  "     set statusline+=%#todo#   " Switch to `todo` highlight.
-
-  " You can insert a unicode character easily from Insert mode, e.g.,:
-  "   <C-q> u21D2
-  " Note that Hack font includes 7 of 36 Powerline glyphs.
-  "   https://github.com/ryanoasis/powerline-extra-symbols#glyphs
-  " Hack includes this Powerline glyphs:
-  "   e0a0       " a branch symbol
-  "   e0a1       " an L/N symbol
-  "   e0a2       " a lock symbol
-  "   e0b0       " a solid right-half of a diamond
-  "   e0b1       " an outline of a right-half of a diamond
-  "   e0b2       " a solid left-half of a diamond
-  "   e0b3       " an outline of a left-half of a diamond
-  " Note that there's an aggregate font, Nerd Fonts, which seems awesome
-  " -- it includes all of the Powerline glyphs, for one -- but there's a
-  " 1-pixel space at the edge of each Powerline glyph. Bah.
-  " Note also that the Powerline glyphs are not actual Unicode.
-  "   http://www.fileformat.info/info/unicode/char/e0b0/index.htm
-  " The 'Symbol, Other' category has good unicode.
-  "   http://www.fileformat.info/info/unicode/category/So/list.htm
 
   if a:active_window
     let l:statline .= "%#MescalineF1Mode#"
@@ -235,7 +237,9 @@ function! s:FetchStatusLineMain(active_window) abort
   endif
   " If you add %b/%B, below:
   "   let l:avail_width -= 16
-  " Remove ' 61% ☰ 1234/1234 : 123 '
+  " Remove width of metric snip, e.g.,
+  "   ' 61% ☰ 1234/1234 : 123 '
+  "    12345678901234567890123
   let l:avail_width -= 23
   if l:git_head != ''
     let l:avail_width -= strlen(l:git_head)
@@ -335,15 +339,15 @@ function! s:FetchStatusLineMain(active_window) abort
   "   hexadecimal value of the character under the cursor.
   " b N   Value of character under cursor.
   " B N   As above, in hexadecimal.
-  ""let l:statline .= "\\ \\ 🔠\\ %b/u%B"
-  "let l:statline .= "\\ \\ 🔠\\ %5b/u%4B"
+  "   "let l:statline .= "\\ \\ 🔠\\ %b/u%B"
+  "   let l:statline .= "\\ \\ 🔠\\ %5b/u%4B"
 
   " l N   Line number.
   " c N   Column number.
   " L N   Number of lines in buffer.
-  "let l:statline .= "\\ \\ \\ %l:%c"
-  "let l:statline .= "\\ ☰\\ %3l/%3L\\ \\ :%3c"
-  "let l:statline .= "\\ ☰\\ %3l/%3L\\ :%3c"
+  "   let l:statline .= "\\ \\ \\ %l:%c"
+  "   let l:statline .= "\\ ☰\\ %3l/%3L\\ \\ :%3c"
+  "   let l:statline .= "\\ ☰\\ %3l/%3L\\ :%3c"
   " Maybe if %l is 4 digits, add extra space after ☰?
   let l:statline .= "\\ ☰\\ %4l/%4L\\ :%3c"
 
