@@ -6,6 +6,7 @@ MAGICAL STATUS LINE			*dubs-mescaline*
 
 1. About This Plugin			|dubs-mescaline-about|
 2. Configuration			|dubs-mescaline-configuration|
+3. Requirements				|dubs-mescaline-requirements|
 
 ==============================================================================
 1. About This Plugin			*dubs-mescaline-about*
@@ -107,6 +108,13 @@ Some notes:
   (otherwise Vim only refreshes the status line when you interact with the
   buffer). If you set a longer clock rate, the status line clock may not
   update for that many milliseconds after the minute changes.
+
+==============================================================================
+3. Requirements				*dubs-mescaline-requirements*
+
+The branch name used in the status line is fetched using `vim-fugitive`:
+
+https://github.com/tpope/vim-fugitive
 
  vim:tw=78:ts=8:ft=help:norl:
 

@@ -96,6 +96,13 @@ Some notes:
   buffer). If you set a longer clock rate, the status line clock may not
   update for that many milliseconds after the minute changes.
 
+Requirements
+============
+
+The branch name used in the status line is fetched using ``vim-fugitive``:
+
+https://github.com/tpope/vim-fugitive
+
 Installation
 ============
 
