@@ -240,7 +240,7 @@ function! s:FetchStatusLineMain(active_window) abort
     let l:avail_width -= 8
   endif
   " If you add %b/%B, below:
-  "let l:avail_width -= 16
+  "   let l:avail_width -= 16
   " Remove ' 61% ☰ 1234/1234 : 123 '
   let l:avail_width -= 23
   if strlen(fugitive#statusline()) > 0
